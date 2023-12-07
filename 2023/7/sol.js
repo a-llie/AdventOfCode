@@ -64,7 +64,6 @@ function PartTwo(data) {
     }
       
   return sum;
-
 }
 
 function SortHand(ordered_cards, ordered_hands, hands)
@@ -177,7 +176,6 @@ function RankHandWild(hand, data)
 }
 
 let data = ImportFile("text.txt");
-
 console.log(PartOne(data));
 console.log(PartTwo(data));
 

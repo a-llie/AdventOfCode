@@ -11,15 +11,13 @@ function ImportFile(fileName)
     lines.forEach(line => {
         let card_number = line.split(": ")[0];
         let values = line.split(": ")[1]; 
-        let winning_numbers = values.split("|")[0].split(" ");
         
+        let winning_numbers = values.split("|")[0].split(" ");
         winning_numbers = winning_numbers.filter(function (el) {
-            return el !== '';
-          });
-
+          return el !== '';
+        });
 
         let your_numbers = values.split("|")[1].split(" ");
-
         your_numbers = your_numbers.filter(function (el) {
           return el !== '';
         });
@@ -27,14 +25,10 @@ function ImportFile(fileName)
         cards[Number(card_number.split("Card")[1])] = { winning_numers : winning_numbers, your_numbers : your_numbers, unchecked : 1 };
 
     });
-
     return cards;
 }
 
-
-
 function PartOne(input) {
-
   
     let card_numbers = Object.keys(input);
     let sum = 0;
@@ -60,8 +54,6 @@ function PartOne(input) {
 
         sum += card_sum;
     });
-  
-
     return sum;
   }
   
@@ -98,10 +90,9 @@ function PartTwo(input) {
         }
     });
     
-    
   }
   return sum + card_numbers.length;
-  }
+}
 
 
 let data = ImportFile("text.txt");

@@ -9,17 +9,11 @@ function ImportFile(fileName)
 
     let times = lines[0].split("Time: ")[1].replace(/\r/gm,'').split(" ").filter(x => x !== '');
     let distance = lines[1].split("Distance: ")[1].replace(/\r/gm,'').split(" ").filter(x => x !== '');
-
-
-    
     data.times = times.map(x => parseInt(x));
     data.distance = distance.map(x => parseInt(x));
 
-
     return data;
 }
-
-
 
 function PartOne(input) {
 
@@ -34,7 +28,6 @@ function PartOne(input) {
 
       sum *= total;
     }
-
     return sum;
   }
   
@@ -53,28 +46,6 @@ function PartTwo(input) {
     return sum;
   }
 
-
 let data = ImportFile("text.txt");
-
-
 console.log(PartOne(data));
 console.log(PartTwo(data));
-
-
-
-
-
-
-
-//helpers
-function CleanArray(input, char)
-{
-  return input.filter(function (el) {
-    return el !== char;
-  });
-}
-
-
-function isNumber(char) {
-  return /^\d$/.test(char);
-}
