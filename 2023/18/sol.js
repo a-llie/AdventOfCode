@@ -4,7 +4,6 @@ const fs = require('fs');
 
 function ImportFile(fileName, p1)
 {
- 
     let data = new Object();
     var file = fs.readFileSync(fileName, 'utf8');
     var lines = file.split("\n");
@@ -61,45 +60,66 @@ function ImportFile(fileName, p1)
     for (let i = 0; i < data.instructions.length; i++)
     {
       let  instructions = data.instructions[i];
-      data.turning_points.push(currPos.toString());
-      switch (instructions[0])
+      data.turning_points.push([currPos[0], currPos[1]]);
+      if (p1)
       {
-        case "R":
-          for (let i = 0; i < instructions[1]; i++)
-          {
-            currPos[1] += 1;
-            if (currPos[1] > max_x) data.x = max_x = currPos[1];
-            if (currPos[1] < min_x || min_x == null) data.low_x = min_x = currPos[1];
-            data.grid[currPos.toString()] = instructions[2];
-          }
-          break;
-        case "L":
-          for (let i = 0; i < instructions[1]; i++)
-          {
-            currPos[1] -= 1;
-            if (currPos[1] > max_x) data.x = max_x = currPos[1];
-            if (currPos[1] < min_x || min_x == null) data.low_x = min_x = currPos[1];
-            data.grid[currPos.toString()] = instructions[2];
-          }
-          break;
-        case "U":
-          for (let i = 0; i < instructions[1]; i++)
-          {
-            currPos[0] -= 1;
-            if (currPos[0] > max_y) data.y = max_y = currPos[0];
-            if (currPos[0] < min_y || min_y == null) data.low_y = min_y = currPos[0];
-            data.grid[currPos.toString()] = instructions[2];
-          }
-          break;
-        case "D":
-          for (let i = 0; i < instructions[1]; i++)
-          {
-            currPos[0] += 1;
-            if (currPos[0] > max_y) data.y = max_y = currPos[0];
-            if (currPos[0] < min_y || min_y == null) data.low_y = min_y = currPos[0];
-            data.grid[currPos.toString()] = instructions[2];
-          }
-          break;
+        switch (instructions[0])
+        {
+          case "R":
+            for (let i = 0; i < instructions[1]; i++)
+            {
+              currPos[1] += 1;
+              if (currPos[1] > max_x) data.x = max_x = currPos[1];
+              if (currPos[1] < min_x || min_x == null) data.low_x = min_x = currPos[1];
+              data.grid[currPos.toString()] = instructions[2];
+            }
+            break;
+          case "L":
+            for (let i = 0; i < instructions[1]; i++)
+            {
+              currPos[1] -= 1;
+              if (currPos[1] > max_x) data.x = max_x = currPos[1];
+              if (currPos[1] < min_x || min_x == null) data.low_x = min_x = currPos[1];
+              data.grid[currPos.toString()] = instructions[2];
+            }
+            break;
+          case "U":
+            for (let i = 0; i < instructions[1]; i++)
+            {
+              currPos[0] -= 1;
+              if (currPos[0] > max_y) data.y = max_y = currPos[0];
+              if (currPos[0] < min_y || min_y == null) data.low_y = min_y = currPos[0];
+              data.grid[currPos.toString()] = instructions[2];
+            }
+            break;
+          case "D":
+            for (let i = 0; i < instructions[1]; i++)
+            {
+              currPos[0] += 1;
+              if (currPos[0] > max_y) data.y = max_y = currPos[0];
+              if (currPos[0] < min_y || min_y == null) data.low_y = min_y = currPos[0];
+              data.grid[currPos.toString()] = instructions[2];
+            }
+            break;
+        }
+      }
+      else 
+      {
+        switch (instructions[0])
+        {
+          case "R":
+            currPos[1] += instructions[1];
+            break;
+          case "L":
+              currPos[1] -= instructions[1];
+            break;
+          case "U":
+              currPos[0] -= instructions[1];
+            break;
+          case "D":
+              currPos[0] += instructions[1];
+            break;
+        }
       }
       data.sum+= instructions[1];
     }
@@ -114,7 +134,6 @@ function PartOne() {
     i++;
   }
   let first_inner_opening = [data.low_y + 1, i+1];
-
   let sum = FillIn(data, first_inner_opening[0], first_inner_opening[1]);
   return data.sum + sum;
 }
@@ -131,10 +150,8 @@ function FillIn(data, y,x)
       sum += FillIn(data, surrounding[0], surrounding[1]);
     }
    });
-
     return sum;
 }
-
 
 function DrawGrid(data)
 {
@@ -162,9 +179,30 @@ function DrawGrid(data)
   return string;
 }
 
+
+//had to learn how to use Shoelace formula and Pick's Theorem for this one 
+// only got part 2 after hints on r/adventofcode
 function PartTwo() {
-  //let data = ImportFile("text.txt", false);
-  //TODO
+  let data = ImportFile("text.txt", false);
+  let turns = data.turning_points;
+  let area = 0;
+  let total = 0;  
+  for (let i = 0; i < turns.length; i++)
+  { 
+    let c1 = turns[i];
+    let c2 = turns[i === turns.length - 1 ? 0 : i + 1];
+    area += c1[1] * c2[0] - c1[0] * c2[1];
+  }
+
+  area = Math.abs(area / 2);
+  for (let i = 0; i < turns.length; i++)
+  { 
+    let c1 = turns[i];
+    let c2 = turns[i === turns.length - 1 ? 0 : i + 1];
+    total += Math.abs(c1[1] - c2[1]) + Math.abs(c1[0] - c2[0]);
+  }
+  return area + 1 - (total / 2) + total;
 }
+
 console.log(PartOne());
 console.log(PartTwo());
