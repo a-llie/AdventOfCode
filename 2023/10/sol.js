@@ -26,67 +26,53 @@ function ImportFile(fileName)
         data.x = j;
       }
     }
-
+    data.lines = lines;
     return data;
 }
 
 function PartOne(data) {
-  let distances = new Array();
 
   CheckEachDirection(data, 0, data.starting_point.x, data.starting_point.y);
 
   let largest = 0; 
-
-
-  let string = ""; 
   for (let i = 0; i < data.y; i++)
-  {
     for (let j = 0; j < data.x; j++)
-    {
-      if (data.chars[[i,j].toString()] && data.chars[[i,j].toString()].distance > largest)
-      {
-        largest = data.chars[[i,j].toString()].distance;
-      }
-      if (data.chars[[i,j].toString()] && data.chars[[i,j].toString()].distance > 0)
-      {
-        string += " ";
-      }
-      else if (data.chars[[i,j].toString()] && data.chars[[i,j].toString()].char === 'S')
-      {
-        string += "S";
-      }
-      else if (data.chars[[i,j].toString()] )
-      {
-        string += "X";
-      }
-      else 
-      {
-        string += ".";
+      if (data.chars[[i,j].toString()] && data.chars[[i,j].toString()].distance > largest) largest = data.chars[[i,j].toString()].distance; 
       
-      }
-    }
-    string+= "\n";
-  }
-
-  // let lines = string.split("\n");
-  // for (let i = 0; i < lines.length; i++)
-  // {
-  //   for (let j = 0; j < lines[i].length; j++)
-  //   {
-  //     if (lines[i][j] === '.')
-  //     {
-  //       let surrounded = false; 
-  //       //check all eight directions
-  //       if ()
-  //     }
-  //   }
-    
-     
-
-  //}
-  console.log(string);
   return largest;
+}
 
+function PartTwo(data) {
+
+  let walls = new Set(['|', 'J', 'L']);  
+  let enclosed = 0; 
+  let enclosed_tiles = new Set();
+  let not_enclosed = new Set();
+  for (let i = 0; i <= data.y; i++)
+  {
+    for (let j = 0; j <= data.x; j++)
+    {
+      let crossed = 0; 
+      if (((data.chars[[i,j].toString()] &&  data.chars[[i,j].toString()].distance <= 0 && data.lines[i][j] !== 'S') || data.lines[i][j] === '.'))
+      {
+        let to_right = false;
+        for (let k = j+1; k <= data.x; k ++)
+          if (walls.has(data.lines[i][k]) && data.chars[[i,k].toString()] && data.chars[[i,k].toString()].distance > 0) to_right  = true;
+
+        if (!to_right) continue;
+
+        for (let k = j - 1; k >= 0; k -- )
+          if (walls.has(data.lines[i][k]) &&  data.chars[[i,k].toString()] && data.chars[[i,k].toString()].distance > 0) crossed++;
+      }
+      if (crossed % 2 === 1)
+      {
+        enclosed_tiles.add([i,j].toString());
+        enclosed++; 
+      } 
+      else not_enclosed.add([i,j].toString());
+    }
+  }
+  return enclosed;
 }
 
 //'|', '-', 'L', 'J', '7', 'F', '.', 'S'
@@ -123,57 +109,37 @@ function CheckEachDirection(data, sum, x, y)
   if (up_char && up_char.distance < sum && up_char.distance > 0) up_char = false;
   if (down_char && down_char.distance < sum && down_char.distance > 0) down_char = false;
 
-  // console.log(".".repeat(sum), char);
   switch(char)
   {
     case 'S':
-      //check down
       if (sum > 0) return;
       if (down_char && down.has(down_char.char)) go_down = true;
-
-      //check left
       if (left_char && left.has(left_char.char)) go_left = true;
-      //check right
       if (right_char && right.has(right_char.char)) go_right = true;
-      //check up 
       if (up_char && up.has(up_char.char)) go_up = true;
-
       break;
     case '|'://up, down
-      //check up
       if (up_char && up.has(up_char.char)) go_up = true;
-      //check down
       if (down_char && down.has(down_char.char)) go_down = true;
-
       break;
     case '-'://right,left   
-      //check left
       if (left_char && left.has(left_char.char)) go_left = true;
-      //check right
       if (right_char && right.has(right_char.char)) go_right = true;
       break;
     case 'L':// up, right
-      //check up
       if (up_char && up.has(up_char.char)) go_up = true;
-      //check right
       if (right_char && right.has(right_char.char)) go_right = true;
       break;
     case 'J':// left, up
-      //check left
       if (left_char && left.has(left_char.char)) go_left = true;
-      //check up
       if (up_char && up.has(up_char.char)) go_up = true;
       break;
     case '7':// left, down
-      //check left
       if (left_char && left.has(left_char.char)) go_left = true;
-      //check down
       if (down_char && down.has(down_char.char)) go_down = true;
       break;
     case 'F'://right, down
-      //check right
       if (right_char && right.has(right_char.char)) go_right = true;
-      //check down
       if (down_char && down.has(down_char.char)) go_down = true;
       break;
   }
@@ -187,3 +153,4 @@ function CheckEachDirection(data, sum, x, y)
 
 let data = ImportFile("text.txt");
 console.log(PartOne(data));
+console.log(PartTwo(data));
