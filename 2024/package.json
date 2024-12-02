@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "eslint": "^9.16.0",
+    "fs": "^0.0.1-security",
+    "fs-extra": "^11.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "typescript": "^5.7.2"
+  },
+  "type": "module",
+  "scripts": {
+    "day": "node run.js"
+  }
+}

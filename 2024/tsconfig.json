@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "outDir": "./dist",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "rootDir": "./src",
+  },
+  "include": [
+    "src/**/*.ts", "src/**/*.txt"
+  ],
+  "exclude": [
+    "node_modules", "src/template.ts"
+  ]
+}
