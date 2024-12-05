@@ -9,4 +9,4 @@ if (!file) {
 }
 
 emptyDirSync('dist');
-execSync(`tsc && node ./dist/${file}/${file}.js`, { stdio: 'inherit' });
+execSync(`tsc && node ./dist/day/${file}.js`, { stdio: 'inherit' });
